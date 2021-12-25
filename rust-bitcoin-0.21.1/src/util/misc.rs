@@ -20,7 +20,7 @@ use hashes::{sha256d, Hash};
 use blockdata::opcodes;
 use consensus::encode;
 
-static MSG_SIGN_PREFIX: &'static [u8] = b"\x18Bitcoin Signed Message:\n";
+static MSG_SIGN_PREFIX: &'static [u8] = b"\x1bUnobtanium Signed Message:\n";
 
 /// Helper function to convert hex nibble characters to their respective value
 #[inline]
