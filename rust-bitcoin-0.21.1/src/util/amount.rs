@@ -54,9 +54,9 @@ impl Denomination {
 impl fmt::Display for Denomination {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.write_str(match *self {
-            Denomination::Bitcoin => "BTC",
-            Denomination::MilliBitcoin => "mBTC",
-            Denomination::MicroBitcoin => "uBTC",
+            Denomination::Bitcoin => "UNO",
+            Denomination::MilliBitcoin => "mUNO",
+            Denomination::MicroBitcoin => "uUNO",
             Denomination::Bit => "bits",
             Denomination::Satoshi => "satoshi",
             Denomination::MilliSatoshi => "msat",
@@ -69,9 +69,9 @@ impl FromStr for Denomination {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "BTC" => Ok(Denomination::Bitcoin),
-            "mBTC" => Ok(Denomination::MilliBitcoin),
-            "uBTC" => Ok(Denomination::MicroBitcoin),
+            "UNO" => Ok(Denomination::Bitcoin),
+            "mUNO" => Ok(Denomination::MilliBitcoin),
+            "uUNO" => Ok(Denomination::MicroBitcoin),
             "bits" => Ok(Denomination::Bit),
             "satoshi" => Ok(Denomination::Satoshi),
             "sat" => Ok(Denomination::Satoshi),
@@ -1164,8 +1164,8 @@ mod tests {
         assert_eq!(sp("-.5", btc), Ok(SignedAmount::from_sat(-500_000_00)));
         assert_eq!(p("1.1", btc), Ok(Amount::from_sat(1_100_000_00)));
         assert_eq!(
-            p("12345678901.12345678", btc),
-            Ok(Amount::from_sat(12_345_678_901__123_456_78))
+            p("123456.12345678", btc),
+            Ok(Amount::from_sat(123_456__123_456_78))
         );
         assert_eq!(p("12.000", Denomination::MilliSatoshi), Err(E::TooPrecise));
     }
@@ -1179,16 +1179,16 @@ mod tests {
         assert_eq!(Amount::ONE_SAT.to_string_in(D::Bitcoin), "0.00000001");
         assert_eq!(SignedAmount::from_sat(-42).to_string_in(D::Bitcoin), "-0.00000042");
 
-        assert_eq!(Amount::ONE_BTC.to_string_with_denomination(D::Bitcoin), "1.00000000 BTC");
+        assert_eq!(Amount::ONE_BTC.to_string_with_denomination(D::Bitcoin), "1.00000000 UNO");
         assert_eq!(Amount::ONE_SAT.to_string_with_denomination(D::MilliSatoshi), "1000 msat");
         assert_eq!(
             SignedAmount::ONE_BTC.to_string_with_denomination(D::Satoshi),
             "100000000 satoshi"
         );
-        assert_eq!(Amount::ONE_SAT.to_string_with_denomination(D::Bitcoin), "0.00000001 BTC");
+        assert_eq!(Amount::ONE_SAT.to_string_with_denomination(D::Bitcoin), "0.00000001 UNO");
         assert_eq!(
             SignedAmount::from_sat(-42).to_string_with_denomination(D::Bitcoin),
-            "-0.00000042 BTC"
+            "-0.00000042 UNO"
         );
     }
 
@@ -1198,19 +1198,19 @@ mod tests {
         let p = Amount::from_str;
         let sp = SignedAmount::from_str;
 
-        assert_eq!(p("x BTC"), Err(E::InvalidCharacter('x')));
-        assert_eq!(p("5 BTC BTC"), Err(E::InvalidFormat));
-        assert_eq!(p("5 5 BTC"), Err(E::InvalidFormat));
+        assert_eq!(p("x UNO"), Err(E::InvalidCharacter('x')));
+        assert_eq!(p("5 UNO UNO"), Err(E::InvalidFormat));
+        assert_eq!(p("5 5 UNO"), Err(E::InvalidFormat));
 
         assert_eq!(p("5 BCH"), Err(E::UnknownDenomination("BCH".to_owned())));
 
-        assert_eq!(p("-1 BTC"), Err(E::Negative));
-        assert_eq!(p("-0.0 BTC"), Err(E::Negative));
-        assert_eq!(p("0.123456789 BTC"), Err(E::TooPrecise));
+        assert_eq!(p("-1 UNO"), Err(E::Negative));
+        assert_eq!(p("-0.0 UNO"), Err(E::Negative));
+        assert_eq!(p("0.123456789 UNO"), Err(E::TooPrecise));
         assert_eq!(sp("-0.1 satoshi"), Err(E::TooPrecise));
-        assert_eq!(p("0.123456 mBTC"), Err(E::TooPrecise));
+        assert_eq!(p("0.123456 mUNO"), Err(E::TooPrecise));
         assert_eq!(sp("-1.001 bits"), Err(E::TooPrecise));
-        assert_eq!(sp("-200000000000 BTC"), Err(E::TooBig));
+        assert_eq!(sp("-200000000000 UNO"), Err(E::TooBig));
         assert_eq!(p("18446744073709551616 sat"), Err(E::TooBig));
 
         assert_eq!(sp("0 msat"), Err(E::TooPrecise));
@@ -1224,9 +1224,9 @@ mod tests {
 
         assert_eq!(p(".5 bits"), Ok(Amount::from_sat(50)));
         assert_eq!(sp("-.5 bits"), Ok(SignedAmount::from_sat(-50)));
-        assert_eq!(p("0.00253583 BTC"), Ok(Amount::from_sat(253583)));
+        assert_eq!(p("0.00253583 UNO"), Ok(Amount::from_sat(253583)));
         assert_eq!(sp("-5 satoshi"), Ok(SignedAmount::from_sat(-5)));
-        assert_eq!(p("0.10000000 BTC"), Ok(Amount::from_sat(100_000_00)));
+        assert_eq!(p("0.10000000 UNO"), Ok(Amount::from_sat(100_000_00)));
         assert_eq!(sp("-100 bits"), Ok(SignedAmount::from_sat(-10_000)));
     }
 
@@ -1289,12 +1289,12 @@ mod tests {
         }
 
         let orig = T {
-            amt: Amount::from_sat(21_000_000__000_000_01),
-            samt: SignedAmount::from_sat(-21_000_000__000_000_01),
+            amt: Amount::from_sat(250_000__000_000_01),
+            samt: SignedAmount::from_sat(-215_000__000_000_01),
         };
 
-        let json = "{\"amt\": 21000000.00000001, \
-                    \"samt\": -21000000.00000001}";
+        let json = "{\"amt\": 250000.00000001, \
+                    \"samt\": -250000.00000001}";
         let t: T = serde_json::from_str(&json).unwrap();
         assert_eq!(t, orig);
 
