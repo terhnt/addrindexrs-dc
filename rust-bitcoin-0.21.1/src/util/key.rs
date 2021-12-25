@@ -127,8 +127,9 @@ impl PrivateKey {
     pub fn fmt_wif(&self, fmt: &mut fmt::Write) -> fmt::Result {
         let mut ret = [0; 34];
         ret[0] = match self.network {
-            Network::Bitcoin => 128,
-            Network::Testnet | Network::Regtest => 239,
+            Network::Bitcoin => 224,
+            Network::Testnet => 239,
+            Network::Regtest => 128,
         };
         ret[1..33].copy_from_slice(&self.key[..]);
         let privkey = if self.compressed {
@@ -159,7 +160,7 @@ impl PrivateKey {
         };
 
         let network = match data[0] {
-            128 => Network::Bitcoin,
+            224 => Network::Bitcoin,
             239 => Network::Testnet,
             x   => { return Err(encode::Error::Base58(base58::Error::InvalidVersion(vec![x]))); }
         };
