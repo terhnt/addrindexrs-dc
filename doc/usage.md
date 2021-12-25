@@ -1,7 +1,7 @@
 ## Installation
 
 Install [latest Rust](https://rustup.rs/) (1.34+),
-[latest Bitcoin Core](https://bitcoincore.org/en/download/) (0.16+).
+[latest Unobtanium Core](https://unobtanium.uno/) (0.11+).
 
 Also, install the following packages (on Debian):
 ```bash
@@ -13,7 +13,7 @@ $ sudo apt install clang cmake  # for building 'rust-rocksdb'
 
 First build should take ~20 minutes:
 ```bash
-$ git clone https://github.com/Samourai-Wallet/addrindexrs
+$ git clone https://github.com/terhnt/addrindexrs
 $ cd addrindexrs
 $ cargo build --release
 ```
@@ -28,7 +28,7 @@ $ bitcoind -server=1 -txindex=1 -prune=0
 ```
 
 If you are using `-rpcuser=USER` and `-rpcpassword=PASSWORD` for authentication, please use `cookie="USER:PASSWORD"` option in one of the config files.
-Otherwise, [`~/.bitcoin/.cookie`](https://github.com/bitcoin/bitcoin/blob/0212187fc624ea4a02fc99bc57ebd413499a9ee1/contrib/debian/examples/bitcoin.conf#L70-L72) will be read, allowing this server to use bitcoind JSONRPC interface.
+Otherwise, [`~/.unobtanium/.cookie`](https://github.com/bitcoin/bitcoin/blob/0212187fc624ea4a02fc99bc57ebd413499a9ee1/contrib/debian/examples/bitcoin.conf#L70-L72) will be read, allowing this server to use bitcoind JSONRPC interface.
 
 ## Usage
 
@@ -39,7 +39,7 @@ $ cargo run --release -- -vvv --timestamp --db-dir ./db --indexer-rpc-addr="127.
 2018-08-17T18:27:42 - INFO - BlockchainInfo { chain: "main", blocks: 537204, headers: 537204, bestblockhash: "0000000000000000002956768ca9421a8ddf4e53b1d81e429bd0125a383e3636", pruned: false, initialblockdownload: false }
 2018-08-17T18:27:42 - DEBUG - opening DB at "./db/mainnet"
 2018-08-17T18:27:42 - DEBUG - full compaction marker: None
-2018-08-17T18:27:42 - INFO - listing block files at "/home/user/.bitcoin/blocks/blk*.dat"
+2018-08-17T18:27:42 - INFO - listing block files at "/home/user/.unobtanium/blocks/blk*.dat"
 2018-08-17T18:27:42 - INFO - indexing 1348 blk*.dat files
 2018-08-17T18:27:42 - DEBUG - found 0 indexed blocks
 2018-08-17T18:27:55 - DEBUG - applying 537205 new headers from height 0
@@ -151,18 +151,18 @@ For more details, see http://docs.electrum.org/en/latest/tor.html.
 
 ### Sample Systemd Unit File
 
-You may wish to have systemd manage addrindexrs so that it's "always on." Here is a sample unit file (which assumes that the bitcoind unit file is `bitcoind.service`):
+You may wish to have systemd manage addrindexrs so that it's "always on." Here is a sample unit file (which assumes that the unobtaniumd unit file is `unobtaniumd.service`):
 
 ```
 [Unit]
 Description=addrindexrs
-After=bitcoind.service
+After=unobtaniumd.service
 
 [Service]
 WorkingDirectory=/home/bitcoin/addrindexrs
 ExecStart=/home/bitcoin/addrindexrs/target/release/addrindexrs --db-dir ./db --indexer-rpc-addr="127.0.0.1:50001"
-User=bitcoin
-Group=bitcoin
+User=unobtanium
+Group=unobtanium
 Type=simple
 KillMode=process
 TimeoutSec=60
