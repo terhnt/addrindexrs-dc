@@ -13,8 +13,8 @@ $ sudo apt install clang cmake  # for building 'rust-rocksdb'
 
 First build should take ~20 minutes:
 ```bash
-$ git clone https://github.com/terhnt/addrindexrs
-$ cd addrindexrs
+$ git clone https://github.com/terhnt/addrindexrs-uno
+$ cd addrindexrs-uno
 $ cargo build --release
 ```
 
@@ -24,7 +24,7 @@ $ cargo build --release
 Allow Bitcoin daemon to sync before starting the indexer. The indexer requires that bitcoin daemon isn't pruned and maintains a txindex.
 
 ```bash
-$ bitcoind -server=1 -txindex=1 -prune=0
+$ unobtaniumd -server=1 -txindex=1 -prune=0
 ```
 
 If you are using `-rpcuser=USER` and `-rpcpassword=PASSWORD` for authentication, please use `cookie="USER:PASSWORD"` option in one of the config files.
