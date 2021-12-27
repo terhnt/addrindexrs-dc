@@ -24,6 +24,9 @@ use crate::util::HeaderList;
 
 
 const DOGECOIN_AUXPOW_BLOCK_HEIGHT: usize = 371377;
+const UNOBTANIUM_AUXPOW_BLOCK_HEIGHT: usize = 600000;
+const UNOBTANIUM_TESTNET_AUXPOW_BLOCK_HEIGHT: usize = 500;
+
 
 fn parse_hash(value: &Value) -> Result<Sha256dHash> {
     Ok(Sha256dHash::from_hex(
